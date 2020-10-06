@@ -17,10 +17,11 @@ package com.example.android.sunshine;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    // TODO (1) Create a field to store the weather display TextView
+    // COMPLETED (1) Create a field to store the weather display TextView
     private TextView mWeatherTextView;
 
     @Override
@@ -28,10 +29,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
 
-        // TODO (2) Use findViewById to get a reference to the weather display TextView
-        mWeatherTextView = (TextView)findViewById(R.id.tv_weather_data);
+        // COMPLETED (2) Use findViewById to get a reference to the weather display TextView
+        /*
+         * Using findViewById, we get a reference to our TextView from xml. This allows us to
+         * do things like set the text of the TextView.
+         */
+        mWeatherTextView = (TextView) findViewById(R.id.tv_weather_data);
 
-        // TODO (3) Create an array of Strings that contain fake weather data
+        // COMPLETED (3) Create an array of Strings that contain fake weather data
+        /*
+         * This String array contains dummy weather data. Later in the course, we're going to get
+         * real weather data. For now, we want to get something on the screen as quickly as
+         * possible, so we'll display this dummy data.
+         */
         String[] dummyWeatherData = {
                 "Today, May 17 - Clear - 17°C / 15°C",
                 "Tomorrow - Cloudy - 19°C / 15°C",
@@ -49,8 +59,13 @@ public class MainActivity extends AppCompatActivity {
                 "Mon, May 30 - Post Apocalypse - 15°C / 10°C",
         };
 
-        // TODO (4) Append each String from the fake weather data array to the TextView
-        for(String dummyWeatherDay : dummyWeatherData){
+        // COMPLETED (4) Append each String from the fake weather data array to the TextView
+        /*
+         * Iterate through the array and append the Strings to the TextView. The reason why we add
+         * the "\n\n\n" after the String is to give visual separation between each String in the
+         * TextView. Later, we'll learn about a better way to display lists of data.
+         */
+        for (String dummyWeatherDay : dummyWeatherData) {
             mWeatherTextView.append(dummyWeatherDay + "\n\n\n");
         }
     }
