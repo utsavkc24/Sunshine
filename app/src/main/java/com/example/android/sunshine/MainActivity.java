@@ -21,6 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.sunshine.data.SunshinePreferences;
@@ -33,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mWeatherTextView;
 
+    // TODO (6) Add a TextView variable for the error message display
+    private TextView mErrorMessageDisplay;
+
+    // TODO (16) Add a ProgressBar variable to show and hide the progress bar
+    private ProgressBar mProgressBarView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
          */
         mWeatherTextView = (TextView) findViewById(R.id.tv_weather_data);
 
+        // TODO (7) Find the TextView for the error message using findViewById
+        mErrorMessageDisplay = (TextView)findViewById(R.id.error_message);
+
+        // TODO (17) Find the ProgressBar using findViewById
+        mProgressBarView = (ProgressBar)findViewById(R.id.progress_circular);
+
         /* Once all of our views are setup, we can load the weather data. */
         loadWeatherData();
     }
@@ -53,11 +67,55 @@ public class MainActivity extends AppCompatActivity {
      * background method to get the weather data in the background.
      */
     private void loadWeatherData() {
+        // TODO (20) Call showWeatherDataView before executing the AsyncTask
+        showWeatherDataView();
         String location = SunshinePreferences.getPreferredWeatherLocation(this);
         new FetchWeatherTask().execute(location);
     }
 
+    // TODO (8) Create a method called showWeatherDataView that will hide the error message and show the weather data
+
+    // TODO (9) Create a method called showErrorMessage that will hide the weather data and show the error message
+    // COMPLETED (8) Create a method called showWeatherDataView that will hide the error message and show the weather data
+    /**
+     * This method will make the View for the weather data visible and
+     * hide the error message.
+     * <p>
+     * Since it is okay to redundantly set the visibility of a View, we don't
+     * need to check whether each view is currently visible or invisible.
+     */
+    private void showWeatherDataView() {
+        /* First, make sure the error is invisible */
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        /* Then, make sure the weather data is visible */
+        mWeatherTextView.setVisibility(View.VISIBLE);
+    }
+
+    // COMPLETED (9) Create a method called showErrorMessage that will hide the weather data and show the error message
+    /**
+     * This method will make the error message visible and hide the weather
+     * View.
+     * <p>
+     * Since it is okay to redundantly set the visibility of a View, we don't
+     * need to check whether each view is currently visible or invisible.
+     */
+    private void showErrorMessage() {
+        /* First, hide the currently visible data */
+        mWeatherTextView.setVisibility(View.INVISIBLE);
+        /* Then, show the error */
+        mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
+
+        // TODO (18) Within your AsyncTask, override the method onPreExecute and show the loading indicator
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressBarView.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected String[] doInBackground(String... params) {
@@ -87,7 +145,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String[] weatherData) {
+            // TODO (19) As soon as the data is finished loading, hide the loading indicator
+            mProgressBarView.setVisibility(View.INVISIBLE);
+
             if (weatherData != null) {
+                // TODO (11) If the weather data was not null, make sure the data view is visible
                 /*
                  * Iterate through the array and append the Strings to the TextView. The reason why we add
                  * the "\n\n\n" after the String is to give visual separation between each String in the
@@ -97,33 +159,31 @@ public class MainActivity extends AppCompatActivity {
                     mWeatherTextView.append((weatherString) + "\n\n\n");
                 }
             }
+            // TODO (10) If the weather data was null, show the error message
+
         }
     }
 
-    // TODO (2) Create a menu resource in res/menu/ called forecast.xml
-    // TODO (3) Add one item to the menu with an ID of action_refresh
-    // TODO (4) Set the title of the menu item to "Refresh" using strings.xml
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
         MenuInflater inflater = getMenuInflater();
+        /* Use the inflater's inflate method to inflate our menu layout to this menu */
         inflater.inflate(R.menu.forecast, menu);
+        /* Return true so that the menu is displayed in the Toolbar */
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_refresh:
-                mWeatherTextView.setText("");
-                loadWeatherData();
-                break;
+        int id = item.getItemId();
+
+        if (id == R.id.action_refresh) {
+            mWeatherTextView.setText("");
+            loadWeatherData();
+            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
-// TODO (5) Override onCreateOptionsMenu to inflate the menu for this Activity
-
-    // TODO (6) Return true to display the menu
-
-    // TODO (7) Override onOptionsItemSelected to handle clicks on the refresh button
 }
